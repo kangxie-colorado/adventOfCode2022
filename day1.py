@@ -34,8 +34,7 @@ def get3MostCalaries(filename):
 
         # ugly again.. why the last empty line don't get returned by f-handle?
         max3[0] = max(max3[0], total)
-        if max3[0] > max3[1]:
-            max3.sort()
+
     return sum(max3)
 
 
