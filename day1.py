@@ -25,6 +25,8 @@ def get3MostCalaries(filename):
                 # swap to max1/2/3 accordingly
                 max3[0] = max(max3[0], total)
                 if max3[0] > max3[1]:
+                    # use a min heap might just avoid sort it
+                    # but not much difference
                     max3.sort()
                 total = 0
             else:
@@ -32,8 +34,7 @@ def get3MostCalaries(filename):
 
         # ugly again.. why the last empty line don't get returned by f-handle?
         max3[0] = max(max3[0], total)
-        if max3[0] > max3[1]:
-            max3.sort()
+
     return sum(max3)
 
 
