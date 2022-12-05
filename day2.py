@@ -64,10 +64,10 @@ def getScoreRD2(fn):
 
 
 if __name__ == '__main__':
-    filename = 'day2_sample.txt'
-    print(getScore(filename))
-    print(getScoreRD2(filename))
+    input_file = 'day2_sample.txt'
+    print(getScore(input_file))
+    print(getScoreRD2(input_file))
 
-    filename = 'day2_input.txt'
-    print(getScore(filename))
-    print(getScoreRD2(filename))
+    input_file = 'day2_input.txt'
+    print(getScore(input_file))
+    print(getScoreRD2(input_file))

@@ -39,10 +39,10 @@ def get_pri_sum_per_group(filename):
 
 
 if __name__ == '__main__':
-    filename = 'day3_sample.txt'
-    print(get_pri_sum(filename))
-    print(get_pri_sum_per_group(filename))
+    input_file = 'day3_sample.txt'
+    print(get_pri_sum(input_file))
+    print(get_pri_sum_per_group(input_file))
 
-    filename = 'day3_input.txt'
-    print(get_pri_sum(filename))
-    print(get_pri_sum_per_group(filename))
+    input_file = 'day3_input.txt'
+    print(get_pri_sum(input_file))
+    print(get_pri_sum_per_group(input_file))

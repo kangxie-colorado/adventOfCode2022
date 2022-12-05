@@ -32,10 +32,10 @@ def overlapping_pairs(filename):
 
 
 if __name__ == '__main__':
-    filename = 'day4_sample.txt'
-    print(fully_contain_pairs(filename))
-    print(overlapping_pairs(filename))
+    input_file = 'day4_sample.txt'
+    print(fully_contain_pairs(input_file))
+    print(overlapping_pairs(input_file))
 
-    filename = 'day4_input.txt'
-    print(fully_contain_pairs(filename))
-    print(overlapping_pairs(filename))
+    input_file = 'day4_input.txt'
+    print(fully_contain_pairs(input_file))
+    print(overlapping_pairs(input_file))

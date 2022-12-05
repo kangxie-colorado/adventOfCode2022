@@ -39,10 +39,10 @@ def get3MostCalaries(filename):
 
 
 if __name__ == '__main__':
-    testFN = "day1_sample_input.txt"
-    print(getMostCalories(testFN))
-    print(get3MostCalaries(testFN))
+    input_file = "day1_sample_input.txt"
+    print(getMostCalories(input_file))
+    print(get3MostCalaries(input_file))
 
-    testFN = "day1_input.txt"
-    print(getMostCalories(testFN))
-    print(get3MostCalaries(testFN))
+    input_file = "day1_input.txt"
+    print(getMostCalories(input_file))
+    print(get3MostCalaries(input_file))
