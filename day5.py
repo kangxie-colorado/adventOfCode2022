@@ -6,7 +6,7 @@ def get_stack_lines(filename):
             lines += 1
             if len(line.strip()) == 0:
                 return lines, stack_lines[::-1]
-
+            # make sure not to strip the left blank spaces
             stack_lines.append(line.rstrip())
         return 0, None
 
