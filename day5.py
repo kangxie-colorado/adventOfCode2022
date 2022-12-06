@@ -19,21 +19,15 @@ def init_stack(stack_lines):
         stacks[i] = []
 
     for line in stack_lines[1:]:
-        start, end = 0, 3
-        stack_idx = 1
-        while end <= len(line):
-            if line[start:end] != "   ":
-                stacks[stack_idx].append(line[start:end][1])
-            start += 4
-            end += 4
-            stack_idx += 1
+        for i in range(0, len(line), 4):
+            if line[i:i + 3] != "   ":
+                stacks[i // 4 + 1].append(line[i:i + 3][1])
 
     return stacks
 
 
 def move_crates(filename, skip, stacks):
     with open(filename) as f:
-
         for line in f:
             if skip:
                 skip -= 1
@@ -51,7 +45,6 @@ def move_crates(filename, skip, stacks):
 
 def move_crates2(filename, skip, stacks):
     with open(filename) as f:
-
         for line in f:
             if skip:
                 skip -= 1
