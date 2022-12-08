@@ -15,6 +15,7 @@ def visible_trees(forest):
 
     # row orientation scan
     for r in range(m):
+        # the initialization can happen when going thru rows
         visible[r] = [0] * n
         visible[r][0] = visible[r][-1] = 1
         if r == 0 or r == m - 1:
@@ -54,106 +55,75 @@ def visible_trees(forest):
     return sum([sum(r) for r in visible])
 
 
+# some thinking about how to do this as follows:
+# scan from left to right, see which tree can see how far into left
+# using a stack..
+# 25512 -> stack: [(0,2)], the stack will be storing increasing numbers
+# on 5, it can see upto the edge.. so 1 and stack becomes [(0,2), (1,5)..
+# not a good example
+# using 33549
+# stack: [(0,3), (1,3)...]
+# on 5.. it can see thru the edge..
+# and it becomes the dominate tower for right further tree.. so only need to remember that
+# okay.. maybe actually this is not a stack
+# just need to keep knowing the so far highest tree to left and see if
+# I can look pass it... but I need to keep the dist-so-far
+# e.g. for this 5... it can looked to edge, which is 2..
+# so if another 6 arrives, it can look thru the 5, and inherits its 2 without effort..
+# .... hmm... stack still..
+# and very annoying is, 3 look at 5, the dist is still 1 but not 0...
 def scenic_scores(forest):
     m, n = len(forest), len(forest[0])
     scores = [[]] * m
 
+    def scan(A, l):
+        res = [1] * l
+        stack = [(0, -1)]
+        i = 1
+        while i < l - 1:
+            extendedStart = i
+            while stack and A[stack[-1][0]] < A[i]:
+                idx, start = stack.pop()
+                extendedStart = start
+                # at least 1, at most to the edge
+                # edge nodes is init-ed to 0, so no matter to them
+                res[idx] *= min(idx - start + 1, idx)
+
+            stack.append((i, extendedStart))
+            i += 1
+
+        while stack:
+            idx, start = stack.pop()
+            res[idx] *= min(idx - start + 1, idx)
+
+        return res
+
     # row orientation scan
     for r in range(m):
+        # initialization also happens when going thru rows
         scores[r] = [1] * n
         scores[r][0] = scores[r][-1] = 0
         if r == 0 or r == m - 1:
             scores[r] = [0] * n
             continue
 
-        # scan from left to right, see which tree can see how far into left
-        # using a stack..
-        # 25512 -> stack: [(0,2)], the stack will be storing increasing numbers
-        # on 5, it can see upto the edge.. so 1 and stack becomes [(0,2), (1,5)..
-        # not a good example
-        # using 33549
-        # stack: [(0,3), (1,3)...]
-        # on 5.. it can see thru the edge..
-        # and it becomes the dominate tower for right further tree.. so only need to remember that
-        # okay.. maybe actually this is not a stack
-        # just need to keep knowing the so far highest tree to left and see if
-        # I can look pass it... but I need to keep the dist-so-far
-        # e.g. for this 5... it can looked to edge, which is 2..
-        # so if another 6 arrives, it can look thru the 5, and inherits its 2 without effort..
-        # .... hmm... stack still..
-        # and very annoying is, 3 look at 5, the dist is still 1 but not 0...
+        left_to_right = scan(forest[r], n)
+        right_to_left = scan(forest[r][::-1], n)[::-1]
 
-        # idx, start; idx-start will be the dist to see
-        stack = [(0, -1)]
-        i = 1
-        while i < n - 1:
-            extendedStart = i
-            while stack and forest[r][stack[-1][0]] < forest[r][i]:
-                idx, start = stack.pop()
-                extendedStart = start
-                # at least 1, at most to the edge
-                scores[r][idx] *= min(idx - start + 1, idx)
-
-            stack.append((i, extendedStart))
-            i += 1
-
-        while stack:
-            idx, start = stack.pop()
-            scores[r][idx] *= min(idx - start + 1, idx)
-
-        # scan from right to left
-        stack = [(n - 1, n - 1)]
-        j = n - 2
-        while j > 0:
-            extendedStart = j
-            while stack and forest[r][stack[-1][0]] < forest[r][j]:
-                idx, start = stack.pop()
-                extendedStart = start
-                scores[r][idx] *= min(abs(idx - start) + 1, n - idx - 1)
-
-            stack.append((j, extendedStart))
-            j -= 1
-        while stack:
-            idx, start = stack.pop()
-            scores[r][idx] *= min(abs(idx - start) + 1, n - idx - 1)
+        idx = 0
+        for lScore,rScore in zip(left_to_right, right_to_left):
+            scores[r][idx] *= lScore * rScore
+            idx += 1
 
     for c in range(n):
-        # top to down
-        stack = [(0, -1)]
-        i = 1
-        while i < m - 1:
-            extendedStart = i
-            while stack and forest[stack[-1][0]][c] < forest[i][c]:
-                idx, start = stack.pop()
-                extendedStart = start
-                # at least 1, at most to the edge
-                scores[idx][c] *= min(idx - start + 1, idx)
-
-            stack.append((i, extendedStart))
-            i += 1
-
-        while stack:
-            idx, start = stack.pop()
-            scores[idx][c] *= min(idx - start + 1, idx)
-
-        # bottom to up
-        stack = [(m - 1, m - 1)]
-        j = m - 2
-        while j > 0:
-            extendedStart = j
-            while stack and forest[stack[-1][0]][c] < forest[j][c]:
-                idx, start = stack.pop()
-                extendedStart = start
-                scores[idx][c] *= min(abs(idx - start) + 1, n - idx - 1)
-
-            stack.append((j, extendedStart))
-            j -= 1
-        while stack:
-            idx, start = stack.pop()
-            scores[idx][c] *= min(abs(idx - start) + 1, n - idx - 1)
+        up_to_down = scan([r[c] for r in forest],m)
+        bottom_to_top = scan([r[c] for r in forest][::-1], m)[::-1]
+        idx = 0
+        for uScore,dScore in zip(up_to_down, bottom_to_top):
+            scores[idx][c] *= uScore * dScore
+            idx += 1
 
     return max([max(i) for i in scores])
-
 
 
 if __name__ == '__main__':
