@@ -26,6 +26,7 @@ def visible_trees(forest):
 
         i, j = 1, n - 2
         # scan from left to right
+        # same time also from right to left
         while i < n - 1:
             if forest[r][i] > leftHigh:
                 visible[r][i] |= 1

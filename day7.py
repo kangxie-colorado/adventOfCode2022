@@ -5,30 +5,25 @@ class TreeNode:
         self.sub_nodes = sub_nodes if sub_nodes else {}
         self.file_sizes = file_sizes if file_sizes else []
 
-    def calculate(self):
-        under_100k = 0
+    def calculate_folder_sizes(self):
         folder_sizes = []
 
         def helper(node):
-            nonlocal under_100k
             if node is None:
                 return 0
-
             dir_size = sum(node.file_sizes)
             for sub_node in node.sub_nodes.values():
                 dir_size += helper(sub_node)
 
-            if dir_size <= 100000:
-                under_100k += dir_size
             folder_sizes.append(dir_size)
             return dir_size
 
-        return helper(self), under_100k, folder_sizes
+        return helper(self), folder_sizes
 
 
 def build_tree(filename):
-    dummy = TreeNode('', {'/': TreeNode('/'), })
-    curr = dummy
+    root = TreeNode('', {'/': TreeNode('/'), })
+    curr = root
     stack = []
     with open(filename) as f:
         for line in f:
@@ -36,14 +31,14 @@ def build_tree(filename):
                 # a command line
                 if line.startswith("$ cd"):
                     # change dir
-                    dir = line.strip()[5:]
-                    if dir == "..":
+                    folder = line.strip()[5:]
+                    if folder == "..":
                         # at most go back to root folder
                         if len(stack) > 1:
                             stack.pop()
                             curr = stack[-1]
                     else:
-                        curr = curr.sub_nodes[dir]
+                        curr = curr.sub_nodes[folder]
                         stack.append(curr)
 
                 if line.startswith("$ ls"):
@@ -51,16 +46,25 @@ def build_tree(filename):
                     ...
             elif line.startswith('dir'):
                 # a line containing a dir
-                dir = line.strip().split()[1]
-                curr.sub_nodes[dir] = TreeNode(dir)
+                folder = line.strip().split()[1]
+                curr.sub_nodes[folder] = TreeNode(folder)
             else:
                 # size filename
                 curr.file_sizes.append(int((line.strip().split()[0])))
-    return dummy
+    return root
 
 
-def get_first_enough_folder_size(total_size, folder_sizes):
-    free = 70000000 - total_size
+def get_sum_of_under_100k(folder_sizes):
+    under_100K_sum = 0
+    for s in sizes:
+        if s < 100000:
+            under_100K_sum += s
+
+    return under_100K_sum
+
+
+def get_first_enough_folder_size(used, folder_sizes):
+    free = 70000000 - used
     for folder_size in sorted(folder_sizes):
         if free + folder_size >= 30000000:
             return folder_size
@@ -70,13 +74,13 @@ def get_first_enough_folder_size(total_size, folder_sizes):
 
 if __name__ == '__main__':
     input_file = 'day7_sample.txt'
-    node = build_tree(input_file)
-    total_size, under_100k_sum, sizes = node.calculate()
-    print(under_100k_sum)
+    root = build_tree(input_file)
+    total_size, sizes = root.calculate_folder_sizes()
+    print(get_sum_of_under_100k(sizes))
     print(get_first_enough_folder_size(total_size, sizes))
 
     input_file = 'day7_input.txt'
-    node = build_tree(input_file)
-    total_size, under_100k_sum, sizes = node.calculate()
-    print(under_100k_sum)
+    root = build_tree(input_file)
+    total_size, sizes = root.calculate_folder_sizes()
+    print(get_sum_of_under_100k(sizes))
     print(get_first_enough_folder_size(total_size, sizes))
