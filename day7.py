@@ -56,7 +56,7 @@ def build_tree(filename):
 
 def get_sum_of_under_100k(folder_sizes):
     under_100K_sum = 0
-    for s in sizes:
+    for s in folder_sizes:
         if s < 100000:
             under_100K_sum += s
 
