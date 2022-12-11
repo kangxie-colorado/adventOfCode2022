@@ -19,12 +19,13 @@ from collections import deque
 #     return x + 3
 #
 #
-def noop(x):
-    return x
+# def noop(x):
+#     return x
 
 
 class MonkeyOp:
-    def __init__(self, opStr, fixture=0):
+    def __init__(self, opStr="+", fixture=0):
+        # default to x+0, which is a noop
         self.op = opStr
         self.fixture = fixture
 
@@ -46,7 +47,7 @@ class MonkeyOp:
 class Monkey:
     def __init__(self, items=None, operation=None, test_divid=1, targets=None):
         self.items = items if items else deque()
-        self.operation = operation if operation else noop
+        self.operation = operation if operation else MonkeyOp()
         self.test_divid = test_divid
         self.targets = targets if targets else []  # 0: True; 1: False
         self.inspected = 0
