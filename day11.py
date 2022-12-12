@@ -44,10 +44,14 @@ class MonkeyOp:
             return f"new = old * old"
 
 
+def noop(x):
+    return MonkeyOp()(x)
+
+
 class Monkey:
     def __init__(self, items=None, operation=None, test_divid=1, targets=None):
         self.items = items if items else deque()
-        self.operation = operation if operation else MonkeyOp()
+        self.operation = operation if operation else noop
         self.test_divid = test_divid
         self.targets = targets if targets else []  # 0: True; 1: False
         self.inspected = 0
@@ -60,6 +64,7 @@ class Monkey:
             item = self.items.popleft()
             # inspect/worry-rest
             item = self.operation(item)
+
             if so_worried:
                 item %= mod
             else:
