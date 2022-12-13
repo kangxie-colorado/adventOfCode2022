@@ -30,8 +30,8 @@ class Test(TestCase):
         assert not compare_arrays([[[]]], [[]])
         assert not compare_arrays([1, [2, [3, [4, [5, 6, 7]]]], 8, 9], [1, [2, [3, [4, [5, 6, 0]]]], 8, 9])
 
-        assert not compare_arrays([[8, 0]], [[], [[[10, 9, 4, 8], [10, 0, 6, 6, 6], [6, 2, 4, 10, 9], 4]], [[9, 9, 5, []], [9, 7, [10, 7]]], [[[8, 0, 10, 9, 5], 7], 6]])
-
+        assert not compare_arrays([[8, 0]], [[], [[[10, 9, 4, 8], [10, 0, 6, 6, 6], [6, 2, 4, 10, 9], 4]],
+                                             [[9, 9, 5, []], [9, 7, [10, 7]]], [[[8, 0, 10, 9, 5], 7], 6]])
 
     def test_make_sure_array_right(self):
         arrays = [
@@ -792,7 +792,7 @@ class Test(TestCase):
             "[[[0],[[0,2,7],[3],6],4]]",
             "[[[4,5,[6,9,5,3,8],6,[5,2,1,2,2]],0,3,1,[]],[[],9,[]]]",
         ]
-        i=1
+        i = 1
         for A, S in zip(arrays, strings):
             assert A == get_array(S), f"{A} vs {get_array(S)}  line-{i}"
-            i+=1
+            i += 1

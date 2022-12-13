@@ -37,9 +37,6 @@ def get_array(s):
 
 
 def compare_arrays(A, B):
-    if type(A) is int and type(B) is int:
-        return A < B
-
     if not A and B:
         return True
     if not B and A:
@@ -75,14 +72,6 @@ def compare_arrays(A, B):
 
 
 def compare_arrays_sort(A, B):
-    if type(A) is int and type(B) is int:
-        if A < B:
-            return -1
-        if A == B:
-            return 0
-        if A > B:
-            return 1
-
     if not A and B:
         return -1
     if not B and A:
