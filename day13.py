@@ -1,10 +1,10 @@
 # wow! just used a little TDD to help design the algorithm
 # it turns out to be correct
+import ast
 from functools import cmp_to_key
-import math
 
 
-def get_array(s):
+def parse_array_from_string(s):
     # keep the current run(a ref) at the top of stack
     # when this run finishes, append it to its parent run
     # which is at the stack top
@@ -32,8 +32,12 @@ def get_array(s):
             curr.append(int(num))
             i = j - 1
         i += 1
-
     return curr
+
+
+def parse_array_from_string(s):
+    # credit to Sean: just use ast.literal_eval
+    return ast.literal_eval(s)
 
 
 def compare_arrays(A, B):
@@ -50,21 +54,9 @@ def compare_arrays(A, B):
         elif type(a) is list or type(b) is list:
             # a number compares to a list
             if type(a) is int:
-                return compare_arrays([a,], b,) or (
-                    [
-                        a,
-                    ]
-                    == b
-                    and compare_arrays(A[1:], B[1:])
-                )
+                return compare_arrays([a, ], b, ) or ([a, ] == b and compare_arrays(A[1:], B[1:]))
             else:
-                return compare_arrays(a, [b,],) or (
-                    a
-                    == [
-                        b,
-                    ]
-                    and compare_arrays(A[1:], B[1:])
-                )
+                return compare_arrays(a, [b, ], ) or (a == [b, ] and compare_arrays(A[1:], B[1:]))
         else:
             return a < b or (a == b and compare_arrays(A[1:], B[1:]))
 
@@ -85,19 +77,9 @@ def compare_arrays_sort(A, B):
         elif type(a) is list or type(b) is list:
             # a number compares to a list
             if type(a) is int:
-                return compare_arrays_sort(
-                    [
-                        a,
-                    ],
-                    b,
-                ) or compare_arrays_sort(A[1:], B[1:])
+                return compare_arrays_sort([a, ], b, ) or compare_arrays_sort(A[1:], B[1:])
             else:
-                return compare_arrays_sort(
-                    a,
-                    [
-                        b,
-                    ],
-                ) or compare_arrays_sort(A[1:], B[1:])
+                return compare_arrays_sort(a, [b, ], ) or compare_arrays_sort(A[1:], B[1:])
         else:
             if a < b:
                 return -1
@@ -126,7 +108,7 @@ def correct_pairs(filename):
                 pair = [[], []]
                 pairIdx += 1
                 continue
-            pair[i] = get_array(line)
+            pair[i] = parse_array_from_string(line)
             i ^= 1
 
     return sum(correct)
@@ -139,7 +121,7 @@ def decoder_key(filename):
             line = line.strip()
             if line == "" or line == "EOF":
                 continue
-            packets.append(get_array(line))
+            packets.append(parse_array_from_string(line))
 
     packets.sort(key=cmp_to_key(compare_arrays_sort))
     prod = 1
@@ -151,17 +133,6 @@ def decoder_key(filename):
 
 
 if __name__ == "__main__":
-    # print(get_array("[111,[2],[3]]"))
-    # print(get_array("[1,[2],[3]]"))
-    # print(get_array("[1,[2,[3,[4,[5,6,7]]]],8,9]"))
-    # print(
-    #     get_array(
-    #         "[[8,6,3,[[4,4,0]]],[[5],4,[[7,5,1,5],7,8],0],[5,2,2,[[8,5],[3,8,4,9,5],6,[3,7,4],[]],5],[3,[9,9,0]]]"
-    #     )
-    # )
-    # print(compare_arrays([], [3]))
-    # print(compare_arrays([9], [[8, 7, 6]]))
-
     input_file = "day13_sample.txt"
     print(correct_pairs(input_file))
     print(decoder_key(input_file))

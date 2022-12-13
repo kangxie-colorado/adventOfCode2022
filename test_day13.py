@@ -1,22 +1,24 @@
 from unittest import TestCase
-from day13 import get_array, compare_arrays
+from day13 import parse_array_from_string, compare_arrays
 
 
 class Test(TestCase):
     def test_get_array(self):
-        assert [1] == get_array('[1]')
-        assert [[1]] == get_array('[[1]]')
+        assert [1] == parse_array_from_string('[1]')
+        assert [11] == parse_array_from_string('[11]')
+        assert [123] == parse_array_from_string('[123]')
+        assert [[1]] == parse_array_from_string('[[1]]')
 
-        assert [1, 2, 3] == get_array('[1,2,3]')
-        assert [1, [2], 3] == get_array('[1,[2],3]')
+        assert [1, 2, 3] == parse_array_from_string('[1,2,3]')
+        assert [1, [2], 3] == parse_array_from_string('[1,[2],3]')
 
-        assert [1, [2], [3]] == get_array('[1,[2],[3]]')
+        assert [1, [2], [3]] == parse_array_from_string('[1,[2],[3]]')
 
-        assert [[1], [2, 3, 4]] == get_array('[[1],[2,3,4]]')
-        assert [1, [2, [3, [4, [5, 6, 7]]]], 8, 9] == get_array('[1,[2,[3,[4,[5,6,7]]]],8,9]')
+        assert [[1], [2, 3, 4]] == parse_array_from_string('[[1],[2,3,4]]')
+        assert [1, [2, [3, [4, [5, 6, 7]]]], 8, 9] == parse_array_from_string('[1,[2,[3,[4,[5,6,7]]]],8,9]')
 
         assert [[8, 6, 3, [[4, 4, 0]]], [[5], 4, [[7, 5, 1, 5], 7, 8], 0],
-                [5, 2, 2, [[8, 5], [3, 8, 4, 9, 5], 6, [3, 7, 4], []], 5], [3, [9, 9, 0]]] == get_array(
+                [5, 2, 2, [[8, 5], [3, 8, 4, 9, 5], 6, [3, 7, 4], []], 5], [3, [9, 9, 0]]] == parse_array_from_string(
             '[[8,6,3,[[4,4,0]]],[[5],4,[[7,5,1,5],7,8],0],[5,2,2,[[8,5],[3,8,4,9,5],6,[3,7,4],[]],5],[3,[9,9,0]]]')
 
     def test_compare_arrays(self):
@@ -794,5 +796,5 @@ class Test(TestCase):
         ]
         i = 1
         for A, S in zip(arrays, strings):
-            assert A == get_array(S), f"{A} vs {get_array(S)}  line-{i}"
+            assert A == parse_array_from_string(S), f"{A} vs {parse_array_from_string(S)}  line-{i}"
             i += 1
