@@ -123,8 +123,7 @@ if __name__ == '__main__':
 
     input_file = 'day14_input.txt'
     mat, bottom = init_matrix(input_file)
-    print_matrix(mat, 0, 200, 50, 600)
 
     # print(simulation(mat, bottom))
     print(simulation2(mat, bottom + 2))
-    print_matrix(mat, 0, 160, 100, 800)
+    print_matrix(mat, 0, 160, 300, 700)
