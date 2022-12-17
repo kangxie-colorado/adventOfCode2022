@@ -83,10 +83,9 @@ class Solution:
         self.sensorMap = {}
 
     def worker2(self, config):
-        # okay.. it is not that good just to lie at the mh+1 for all the sensors
+        # okay... it is not that good just to look as far as at the mh+1 for all the sensors
         # this is not logically complete
         print(config)
-        # print(self.sensors)
         x_start, y_start, l = config
         undetected = []
 
@@ -152,7 +151,7 @@ class Solution:
                 self.sensorMap[(sensor_x, sensor_y)] = manhattan_dist
                 self.beacons.add((beacon_x, beacon_y))
 
-    def find_undetected_coord(self, filename, max_coord):
+    def find_undetected_coord_mp(self, filename, max_coord):
         # using multiple processing
         l = 2000
         # we can deal with first row and first column separately if needed
@@ -199,17 +198,17 @@ class Solution:
                             new_ranges.append([max(sx + d_col + 1, start), end])
                 range_by_row[row] = new_ranges
 
-        for row, ranges in range_by_row.items():
-            # row_string = f'{row:<3}'
-            # row_arr = ['#'] * (max_coord + 1)
-            # for start, end in ranges:
-            #     for i in range(start, end):
-            #
-            # row_string = f"{row_string} {''.join(row_arr)}"
-            # print(row_string)
-            if ranges:
-                print(row, ranges)
-        print()
+            for row, ranges in range_by_row.items():
+                row_string = f'{row:<3}'
+                row_arr = ['#'] * (max_coord + 1)
+                for start, end in ranges:
+                    for i in range(start, end):
+                        row_arr[i] = '.'
+                row_string = f"{row_string} {''.join(row_arr)}"
+                print(row_string)
+                # if ranges:
+                #     print(row, ranges)
+            print()
 
 
 if __name__ == '__main__':
@@ -220,9 +219,9 @@ if __name__ == '__main__':
     # S.find_undetected_coord(input_file, 20)
     S.find_that_coord(20)
 
-    input_file = 'day15_input.txt'
-    print(get_blocked_on_line(2000000, input_file))
-    S = Solution()
-    S.get_sensors_beacons(input_file)
-    # S.find_undetected_coord(input_file, 20)
-    S.find_that_coord(4000000)
+    # input_file = 'day15_input.txt'
+    # print(get_blocked_on_line(2000000, input_file))
+    # S = Solution()
+    # S.get_sensors_beacons(input_file)
+    # # S.find_undetected_coord(input_file, 20)
+    # S.find_that_coord(4000000)
